@@ -1,0 +1,7 @@
+# System packages installed via apt-get during the Render build.
+# Render's native Python runtime reads this file automatically.
+#
+# ffmpeg provides both `ffmpeg` and `ffprobe` binaries, which the
+# application uses for media probing and conversion.
+
+ffmpeg

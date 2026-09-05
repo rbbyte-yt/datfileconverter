@@ -1,0 +1,9 @@
+# RB-DAT Converter — Python dependencies
+# Keep minimal: only what the application actually imports.
+#
+# Flask pulls in Jinja2 automatically. Werkzeug is a Flask dependency but
+# is imported directly by app.py, so it is pinned explicitly for security.
+
+Flask==3.0.3
+Werkzeug==3.0.3
+gunicorn==22.0.0

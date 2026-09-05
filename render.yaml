@@ -1,0 +1,23 @@
+# Render deployment configuration for RB-DAT Converter.
+# Docs: https://render.com/docs/blueprint-spec
+#
+# This Blueprint defines a single Python web service.
+# FFmpeg is installed during the build via the apt.txt file in the repo root.
+
+services:
+  - type: web
+    name: rb-dat-converter
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --workers 1 --threads 4 --timeout 120 --graceful-timeout 30
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: MAX_FILE_SIZE
+        value: "2147483648"
+      - key: JOB_TTL_SECONDS
+        value: "3600"

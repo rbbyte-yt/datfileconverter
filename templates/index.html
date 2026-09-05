@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert DAT video files to MP4 quickly and easily with real FFmpeg conversion.">
+    <title>RB-DAT Converter — DAT to MP4 Converter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="brand" href="/" aria-label="RB-DAT Converter home">
+                <span class="brand-mark" aria-hidden="true">RB</span>
+                <span class="brand-name">RB-DAT Converter</span>
+            </a>
+            <nav class="header-nav" aria-label="Primary navigation">
+                <a href="#convert">Convert</a>
+                <a href="#how-it-works">How it works</a>
+                <a href="#limitations">Limitations</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero" id="convert">
+            <div class="container">
+                <h1 class="hero-title">DAT to MP4 Converter</h1>
+                <p class="hero-subtitle">
+                    Convert your DAT video files to MP4 quickly and easily.
+                    Files are processed on the server with FFmpeg and never stored permanently.
+                </p>
+
+                <div class="converter-card" id="converterCard">
+                    <!-- Drop zone -->
+                    <div id="dropZone" class="drop-zone" tabindex="0" role="button"
+                         aria-label="Drop a DAT file here or click to choose a file">
+                        <svg class="drop-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                        </svg>
+                        <p class="drop-title">Drag and drop your DAT file here</p>
+                        <p class="drop-hint">or</p>
+                        <button type="button" class="btn btn-primary" id="chooseBtn">Choose DAT File</button>
+                        <input type="file" id="fileInput" accept=".dat" hidden>
+                        <p class="drop-meta">Maximum file size: 2.00 GB &middot; Only .dat files</p>
+                    </div>
+
+                    <!-- File info -->
+                    <div id="fileInfo" class="file-info hidden" aria-live="polite">
+                        <div class="file-info-row">
+                            <div class="file-info-label">File name</div>
+                            <div class="file-info-value" id="fileName">&mdash;</div>
+                        </div>
+                        <div class="file-info-row">
+                            <div class="file-info-label">File size</div>
+                            <div class="file-info-value" id="fileSize">&mdash;</div>
+                        </div>
+                        <div class="file-info-row">
+                            <div class="file-info-label">Validation</div>
+                            <div class="file-info-value" id="fileValidation">&mdash;</div>
+                        </div>
+                    </div>
+
+                    <!-- Upload progress -->
+                    <div id="uploadProgress" class="progress-block hidden" aria-live="polite">
+                        <div class="progress-label">
+                            <span id="uploadStatus">Uploading...</span>
+                            <span id="uploadPercent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="uploadFill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Conversion progress -->
+                    <div id="convertProgress" class="progress-block hidden" aria-live="polite">
+                        <div class="progress-label">
+                            <span id="convertStatus">Converting...</span>
+                            <span id="convertPercent"></span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="convertFill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="actions">
+                        <button type="button" class="btn btn-primary hidden" id="convertBtn" disabled>
+                            Convert to MP4
+                        </button>
+                        <button type="button" class="btn btn-success hidden" id="downloadBtn">
+                            Download MP4
+                        </button>
+                        <button type="button" class="btn btn-secondary hidden" id="resetBtn">
+                            Start Again
+                        </button>
+                    </div>
+
+                    <!-- Messages -->
+                    <div id="errorMessage" class="error-message hidden" role="alert"></div>
+                    <div id="successMessage" class="success-message hidden" role="status"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="how-it-works" id="how-it-works">
+            <div class="container">
+                <h2>How it works</h2>
+                <ol class="steps">
+                    <li>
+                        <strong>Select</strong> a .dat video file using the drop zone or the Choose button.
+                        The frontend validates the extension and size before upload.
+                    </li>
+                    <li>
+                        <strong>Upload</strong> &mdash; the file is streamed to the server in chunks and
+                        saved to a unique per-job directory.
+                    </li>
+                    <li>
+                        <strong>Convert</strong> &mdash; FFmpeg inspects the media, then produces a real
+                        MP4 container. Progress is reported live when measurable.
+                    </li>
+                    <li>
+                        <strong>Download</strong> your .mp4 file. Temporary files are cleaned up
+                        automatically after a short TTL or when you click Start Again.
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="limitations" id="limitations">
+            <div class="container">
+                <h2>Limitations &amp; honesty</h2>
+                <ul class="limit-list">
+                    <li>
+                        The application is configured to accept files up to <strong>2.00 GB</strong>
+                        (2,147,483,648 bytes). This is the application-level limit.
+                    </li>
+                    <li>
+                        Whether a 2 GB file can actually complete depends on the hosting provider's
+                        disk space, RAM, CPU, request timeout, and whether the web service stays awake.
+                        Render's free tier may not reliably complete very large conversions.
+                    </li>
+                    <li>
+                        Render's free web services have limited RAM (512 MB), an ephemeral filesystem,
+                        a request timeout, and may sleep after inactivity. Long conversions or large
+                        downloads can be interrupted.
+                    </li>
+                    <li>
+                        No file is permanently stored. All temporary files are deleted after a short
+                        TTL or after you click Start Again.
+                    </li>
+                    <li>
+                        Conversion progress is real, parsed from FFmpeg's machine-readable progress
+                        output. If the source duration cannot be determined, an indeterminate indicator
+                        is shown instead of a fake percentage.
+                    </li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>RB-DAT Converter &mdash; Real FFmpeg conversion, no fake progress, no fake downloads.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
